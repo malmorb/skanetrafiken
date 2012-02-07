@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.etis.fskab.se/v1.0/ETISws" xmlns="http://www.etis.fskab.se/v1.0/ETISws" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+  <!-- 
+  Query string parameters
+	inpPointFr 	search string, from point	
+	inpPointTo 	search string, to point	  
+  -->
+
+  <!-- 
+  
+  Simple types in Response
+  
+  -->
+  <xs:simpleType name="PointType">
+    <xs:annotation>
+      <xs:documentation>Denotes types of from / to points.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="STOP_AREA" />
+      <xs:enumeration value="ADDRESS" />
+      <xs:enumeration value="POI" />
+      <xs:enumeration value="UNKNOWN" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- 
+  
+  Response schema  
+  -->
+  <xs:element name="GetStartEndPointResult">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Code" type="xs:int" minOccurs="1" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Response code, 0 if successful operation</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Message" type="xs:string" minOccurs="1" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation xml:lang="se">Error message, empty if response code = 0</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="StartPoints" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="Point" type="Point">
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="EndPoints" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="Point" type="Point">
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ViaPoints" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>[Optional] Element exists only if via point requested, the default is search without via point</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="Point" type="Point">
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="Point">
+    <xs:sequence>
+      <xs:element name="Id" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>Unique Point (Stop Area, Address or Poi) Id</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Stop Area, Address or Poi name as displayed for users</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Type" type="PointType">
+        <xs:annotation>
+          <xs:documentation>Denotes type of point (Stop Area, Address or Poi)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="X" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>X coordinate, RT90</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Y" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>Y coordinate, RT90</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
