@@ -4,7 +4,8 @@ require 'net/http'
 
 class Skanetrafiken
   def getxml(url)
-     return Net::HTTP.get_response(URI.parse(url)).body 
+     uri = URI(url)
+     return Net::HTTP.get_response(uri).body 
   end
   def getStations(name)
     stationurl = QueryStationUrl.new
@@ -30,9 +31,11 @@ end
 class GetJourneyUrl
   def render(selPointFr,selPointTo,lastStartD)
     lastStart = lastStartD.strftime("%Y-%m-%d %H:%M")
+    to = URI.escape("#{selPointTo[:name]}|#{selPointTo[:id]}|#{selPointTo[:type]}")
+    from = URI.escape("#{selPointFr[:name]}|#{selPointFr[:id]}|#{selPointFr[:type]}")
     return ["http://www.labs.skanetrafiken.se/v2.2/resultspage.asp?cmdaction=next",
-    "selPointFr=#{URI.escape(selPointFr[:name])}|#{selPointFr[:id]}|#{selPointFr[:type]}",
-    "selPointTo=#{URI.escape(selPointTo[:name])}|#{selPointTo[:id]}|#{selPointTo[:type]}",
+    "selPointFr=#{from}",
+    "selPointTo=#{to}",
     "LastStart=#{URI.escape(lastStart)}"].join("&")
   end
 end
