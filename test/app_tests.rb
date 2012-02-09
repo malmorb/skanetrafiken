@@ -1,3 +1,4 @@
+#!/opt/local/bin/ruby1.9
 $:.unshift File.dirname("../app.rb")
 require "app"
 

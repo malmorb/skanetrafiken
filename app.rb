@@ -1,3 +1,4 @@
+#!/opt/local/bin/ruby1.9
 require 'skanetrafiken'
 class HttpGetResponse
   def get_response_body(uri)
@@ -6,9 +7,9 @@ class HttpGetResponse
 end
 class App
   def initialize opts = {}
-      @querystation = opts.delete(:query_station) || Skanetrafiken::QueryStation.new
-      @getjourney = opts.delete(:get_journey) || Skanetrafiken::GetJourney.new
-      @getresponse = opts.delete(:get_response) || HttpGetResponse.new
+      @querystation = opts[:query_station] || Skanetrafiken::QueryStation.new
+      @getjourney = opts[:get_journey] || Skanetrafiken::GetJourney.new
+      @getresponse = opts[:get_response] || HttpGetResponse.new
   end
   def getxml(url)
      uri = URI(url)

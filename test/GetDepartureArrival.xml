@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.etis.fskab.se/v1.0/ETISws" xmlns="http://www.etis.fskab.se/v1.0/ETISws" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!-- 
+  Query string parameters
+    	selPointFrKey	Stop Area id
+	inpDate		[Optional] date for departure
+	inpTime		[Optional] time for departure
+	selDirection	[Optional] 0 = departures, 1 = arrivals
+
+  -->
+
+
+  <!-- 
+ 
+  Response schema  
+  -->
+  <xs:element name="GetDepartureArrivalResult">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Code" type="xs:int" minOccurs="1" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Response code, 0 if successful operation</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Message" type="xs:string" minOccurs="1" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation xml:lang="se">Error message, empty if response code = 0</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="1" maxOccurs="1" name="Lines">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Line" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1">
+                      <xs:annotation>
+                        <xs:documentation>Line's name</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="No" type="xs:int" minOccurs="1" maxOccurs="1">
+                      <xs:annotation>
+                        <xs:documentation>Line's number</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="JourneyDateTime" type="xs:dateTime" minOccurs="1" maxOccurs="1">
+                      <xs:annotation>
+                        <xs:documentation>Date and time for departure / arrival</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="IsTimingPoint" type="xs:boolean" minOccurs="1" maxOccurs="1">
+                      <xs:annotation>
+                        <xs:documentation>Denotes if JourneyDateTime is a timing point. False means that DateTime is aproximated time</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="StopPoint" type="xs:string" minOccurs="1" maxOccurs="1">
+                      <xs:annotation>
+                        <xs:documentation>Stop point </xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="LineTypeId" type="xs:int" minOccurs="1" maxOccurs="1">
+                      <xs:annotation>
+                        <xs:documentation>Reference to one line type in line types collection defined by transport authority. All available line types and ids can be retreved from GetMeansOfTransport function</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="LineTypeName" type="xs:string" minOccurs="1" maxOccurs="1">
+                      <xs:annotation>
+                        <xs:documentation>Line type name</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="Towards" type="xs:string" minOccurs="1" maxOccurs="1">
+                      <xs:annotation>
+                        <xs:documentation>Destination text</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="FootNotes" minOccurs="1" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="FootNote" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="Index" type="xs:string" minOccurs="1" maxOccurs="1">
+                                  <xs:annotation>
+                                    <xs:documentation>FootNote's index, allways unique in scope of journey</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                                <xs:element name="Text" type="xs:string" minOccurs="1" maxOccurs="1">
+                                  <xs:annotation>
+                                    <xs:documentation>FootNote's text</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="RealTime" minOccurs="1" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="RealTimeInfo" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="NewDepPoint" type="xs:string" minOccurs="0" maxOccurs="1">
+                                  <xs:annotation>
+                                    <xs:documentation>Stop Point deviation from timetable (on departure side). Information about new Stop Point</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                                <xs:element name="NewArrPoint" type="xs:string" minOccurs="0" maxOccurs="1">
+                                  <xs:annotation>
+                                    <xs:documentation>Stop Point deviation from timetable (on arrival side). Information about new Stop Point</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                                <xs:element name="DepTimeDeviation" type="xs:int" minOccurs="0" maxOccurs="1">
+                                  <xs:annotation>
+                                    <xs:documentation>Deviation from timetable time in min. (on departure side). Delays are positive integer values and earlier times are negative.</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                                <xs:element name="DepDeviationAffect" type="RealTimeAffect" minOccurs="0" maxOccurs="1">
+                                  <xs:annotation>
+                                    <xs:documentation>Describes how departure time deviation affects the journey.</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                                <xs:element name="ArrTimeDeviation" type="xs:int" minOccurs="0" maxOccurs="1">
+                                  <xs:annotation>
+                                    <xs:documentation>Deviation from timetable time in min. (on arrival side). Delays are positive integer values and earlier times are negative.</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                                <xs:element name="ArrDeviationAffect" type="RealTimeAffect" minOccurs="0" maxOccurs="1">
+                                  <xs:annotation>
+                                    <xs:documentation>Describes how arrival time deviation affects the journey.</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                                <xs:element name="Canceled" type="xs:boolean" minOccurs="0" maxOccurs="1">
+                                  <xs:annotation>
+                                    <xs:documentation>Denotes if vehicle run is canceled. This event can impact the whole journey</xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="TrainNo" type="xs:int" minOccurs="1" maxOccurs="1">
+                      <xs:annotation>
+                        <xs:documentation>Additional info about train number if route link's line type is train</xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="Deviations" minOccurs="1" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Deviation" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="DeviationScopes" minOccurs="1" maxOccurs="1">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="DeviationScope" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element name="ScopeAttribute" minOccurs="1" maxOccurs="unbounded" type="ScopeAttributeType">
+                                            </xs:element>
+                                            <xs:element name="FromDateTime" type="xs:dateTime" />
+                                            <xs:element name="ToDateTime" type="xs:dateTime" />
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="PublicNote" type="xs:string" minOccurs="1" maxOccurs="1" />
+                                <xs:element name="Header" type="xs:string" minOccurs="1" maxOccurs="1" />
+                                <xs:element name="Details" type="xs:string" minOccurs="1" maxOccurs="1" />
+                                <xs:element name="Summary" type="xs:string" minOccurs="1" maxOccurs="1" />
+                                <xs:element name="ShortText" type="xs:string" minOccurs="1" maxOccurs="1">
+                                  <xs:annotation>
+                                    <xs:documentation>
+                                      SMS Text<xs:restriction><xs:maxLength value="190" /></xs:restriction></xs:documentation>
+                                  </xs:annotation>
+                                </xs:element>
+                                <xs:element name="Importance" type="xs:int" minOccurs="1" maxOccurs="1" />
+                                <xs:element name="Influence" type="xs:int" minOccurs="1" maxOccurs="1" />
+                                <xs:element name="Urgency" type="xs:int" minOccurs="1" maxOccurs="1" />
+                                <xs:element name="WebLinks" minOccurs="1" maxOccurs="1">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="WebLink" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element name="URL" type="xs:string" minOccurs="1" maxOccurs="1" />
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="RoadInfoType">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="UNKNOWN" />
+      <xs:enumeration value="WEATHER" />
+      <xs:enumeration value="ROAD_ACCIDENT" />
+      <xs:enumeration value="ROAD_WORK" />
+      <xs:enumeration value="ROAD_CONDITION" />
+      <xs:enumeration value="EVENT" />
+      <xs:enumeration value="HOLIDAY" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="RealTimeAffect">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="CRITICAL" />
+      <xs:enumeration value="NON_CRITICAL" />
+      <xs:enumeration value="PASSED" />
+      <xs:enumeration value="NONE" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ScopeAttributeType">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="CONCERNS_DEPARTURE" />
+      <xs:enumeration value="CONCERNS_ARRIVAL" />
+      <xs:enumeration value="CONCERNS_LINE" />
+      <xs:enumeration value="CONCERNS_DEPARR" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
