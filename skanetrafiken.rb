@@ -1,80 +1,71 @@
 require "rubygems"
 #require 'URI'
 require 'net/http'
-
-class Skanetrafiken
-  def getxml(url)
-     uri = URI(url)
-     return Net::HTTP.get_response(uri).body 
-  end
-  def getStations(name)
-    stationurl = QueryStationUrl.new
-    lsx = getxml(stationurl.render(name)) 
-    return QueryStationParser.new( lsx).stations()
-  end
-  def getTimes(nameFrom, nameTo, time)
-    from = getStations(nameFrom)[0]
-    to = getStations(nameTo)[0]
-    journeyurl = GetJourneyUrl.new
-    lsx = getxml(journeyurl.render(from,to,time))
-    return GetJourneyParser.new(lsx).gettimes()
-  end
-end
-
-
-class QueryStationUrl
-  def render(name)
-    return "http://www.labs.skanetrafiken.se/v2.2/querystation.asp?inpPointfr=#{URI.escape(name)}"
-  end
-end
-
-class GetJourneyUrl
-  def render(selPointFr,selPointTo,lastStartD)
-    lastStart = lastStartD.strftime("%Y-%m-%d %H:%M")
-    to = URI.escape("#{selPointTo[:name]}|#{selPointTo[:id]}|#{selPointTo[:type]}")
-    from = URI.escape("#{selPointFr[:name]}|#{selPointFr[:id]}|#{selPointFr[:type]}")
-    return ["http://www.labs.skanetrafiken.se/v2.2/resultspage.asp?cmdaction=next",
-    "selPointFr=#{from}",
-    "selPointTo=#{to}",
-    "LastStart=#{URI.escape(lastStart)}"].join("&")
-  end
-end
-
 require 'rexml/document'
 
-class GetJourneyParser
-  def initialize(html)
-      @doc = REXML::Document.new(html)
-  end
-  def gettimes()
-      el = []
-      v = @doc.elements["soap:Envelope/soap:Body/GetJourneyResponse/GetJourneyResult/Journeys"]
-      v.elements.each("Journey") { |j|
-          el.push(j.elements["DepDateTime"].text)
-      }
-      return el
-  end
-end
-
-class QueryStationParser
+module Skanetrafiken
+  $point_indexes = [:stop, :address, :poi, :unknown]
+  $point_string_totype ={ "STOP_AREA" => :stop, "ADDRESS" => :address, "POI" => :poi, "UNKNOWN" => :unknown}
   
-  def initialize(html)
-      @doc = REXML::Document.new(html)
-      @types ={ "STOP_AREA" => 0, "ADDRESS" => 1, "POI" => 2, "UNKNOWN" => 3}
+  class Point
+    attr_reader :name, :id, :type
+    def initialize(name,id,type)
+      @name=name
+      @id=id
+      @type=type
+    end
+    def ==(another_point)
+      self.name == another_point.name && self.id == another_point.id && self.type == another_point.type
+    end
+    def render()
+        idx = $point_indexes.index(@type)
+       return URI.escape("#{@name}|#{@id}|#{idx}")
+    end    
   end
-  def parseType(val)
-    return @types[val]
+  
+  class GetJourney
+    def initialize()
+    end
+    def render_url(pointFrom,pointTo,lastStart)
+      lastStartText = lastStart.strftime("%Y-%m-%d %H:%M")
+      to = pointTo.render()
+      from = pointFrom.render()
+      return ["http://www.labs.skanetrafiken.se/v2.2/resultspage.asp?cmdaction=next",
+      "selPointFr=#{from}",
+      "selPointTo=#{to}",
+      "LastStart=#{URI.escape(lastStartText)}"].join("&")
+    end
+    
+    def get_times(html)
+        doc = REXML::Document.new(html)
+        el = []
+        v = doc.elements["soap:Envelope/soap:Body/GetJourneyResponse/GetJourneyResult/Journeys"]
+        v.elements.each("Journey") { |j|
+            el.push(j.elements["DepDateTime"].text)
+        }
+        return el
+    end
   end
-  def stations()
-      el = []
-      v = @doc.elements["soap:Envelope/soap:Body/GetStartEndPointResponse/GetStartEndPointResult/StartPoints"]
-      v.elements.each("Point") { |j|
-          el.push({
-            :id=>j.elements["Id"].text,
-            :name=>j.elements["Name"].text,
-            :type=>parseType(j.elements["Type"].text)
-          })
-      }
-      return el
+
+  class QueryStation
+  
+    def initialize()
+    end
+    def render_url(name)
+      return "http://www.labs.skanetrafiken.se/v2.2/querystation.asp?inpPointfr=#{URI.escape(name)}"
+    end
+    def get_stations(html)
+        doc = REXML::Document.new(html)
+        el = []
+        v = doc.elements["soap:Envelope/soap:Body/GetStartEndPointResponse/GetStartEndPointResult/StartPoints"]
+        v.elements.each("Point") { |j|
+            el.push(Point.new(
+              j.elements["Name"].text,
+              j.elements["Id"].text,
+              $point_string_totype[j.elements["Type"].text]
+            ))
+        }
+        return el
+    end
   end
 end
