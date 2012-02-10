@@ -3,7 +3,17 @@ require "rubygems"
 #require 'URI'
 require 'net/http'
 require 'rexml/document'
+require "crack"
+require "json"
+
 module Skanetrafiken
+
+  class XmlToJson
+    def convert(xml)
+      return Crack::XML.parse(xml).to_json
+    end
+  end
+  
   $point_indexes = [:stop, :address, :poi, :unknown]
   $point_string_totype ={ "STOP_AREA" => :stop, "ADDRESS" => :address, "POI" => :poi, "UNKNOWN" => :unknown}
   
@@ -32,8 +42,9 @@ module Skanetrafiken
   end
   
   class GetJourney
-    def initialize()
+    def initialize opts = {}
       @uri = UriHelper.new
+      @xmltojson = opts[:xml_to_json] || XmlToJson.new()
     end
     def render_url(pointFrom,pointTo,lastStart)
       lastStartText = lastStart.strftime("%Y-%m-%d %H:%M")
@@ -51,19 +62,25 @@ module Skanetrafiken
     def get_times(html)
         doc = REXML::Document.new(html)
         el = []
-        v = doc.elements["soap:Envelope/soap:Body/GetJourneyResponse/GetJourneyResult/Journeys"]
-        v.elements.each("Journey") { |j|
+        doc.elements["soap:Envelope/soap:Body/GetJourneyResponse/GetJourneyResult/Journeys"]\
+        .elements.each("Journey") { |j|
             el.push(j.elements["DepDateTime"].text)
         }
         return el
     end
+    def json(html)
+        doc = REXML::Document.new(html)
+        xml = doc.elements["soap:Envelope/soap:Body/GetJourneyResponse/GetJourneyResult/Journeys"]
+        return @xmltojson.convert( xml.to_s )
+    end
   end
   
   class QueryStation
-    def initialize()
+    def initialize opts={}
+        @xmltojson = opts[:xml_to_json] || XmlToJson.new()
     end
     def render_url(name)
-      return "http://www.labs.skanetrafiken.se/v2.2/querystation.asp?inpPointfr=#{URI.escape(name)}"
+        return "http://www.labs.skanetrafiken.se/v2.2/querystation.asp?inpPointfr=#{URI.escape(name)}"
     end
     def get_stations(html)
         doc = REXML::Document.new(html)
@@ -78,11 +95,19 @@ module Skanetrafiken
         }
         return el
     end
+    def json(html)
+      doc = REXML::Document.new(html)
+      xml = doc.elements["soap:Envelope/soap:Body/GetStartEndPointResponse/GetStartEndPointResult/StartPoints"]
+      return @xmltojson.convert( xml.to_s )
+    end
   end
+
 
   $properties_line = {:name=>'Name',:no=>'No',:journey_date_time=>'JourneyDateTime',:is_timing_point=>'IsTimingPoint',\
     :stop_point=>'StopPoint',:line_type_id=>'LineTypeId',:line_type_id=>'LineTypeId',:line_type_name=>'LineTypeName',\
     :towards=>'Towards'}
+    
+    
   class Line
     attr_reader :name,:no,:journey_date_time,:is_timing_point,\
       :stop_point,:line_type_id,:line_type_id,:line_type_name,\
@@ -110,8 +135,12 @@ module Skanetrafiken
       return a.join(", ")
     end
   end
+  
+  
   class GetDepartureArrival
-    
+    def initialize opts={}
+        @xmltojson = opts[:xml_to_json] || XmlToJson.new()
+    end
     def render_url(point)
       return "http://www.labs.skanetrafiken.se/v2.2/stationresults.asp?selPointFrKey=#{point.id}"
     end
@@ -132,14 +161,11 @@ module Skanetrafiken
       }
       return el
     end
-  end
-
-  require "crack"
-  require "json"
-
-  class XmlToJson
-    def convert(xml)
-      return Crack::XML.parse(xml).to_json
+    
+    def json(html)
+      doc = REXML::Document.new(html)
+      xml = doc.elements["soap:Envelope/soap:Body/GetDepartureArrivalResponse/GetDepartureArrivalResult/Lines"]
+      return @xmltojson.convert( xml.to_s )
     end
   end
 end

@@ -75,33 +75,36 @@ class GetDepartureArrivalUrlTests < Test::Unit::TestCase
 end
 
 
-class GetJourneyParserTests < Test::Unit::TestCase
+class GetJourneyTests < Test::Unit::TestCase
+  def setup
+    @file = File.open("GetJourney_resultspage.xml", "r").read
+    @g = Skanetrafiken::GetJourney.new
+  end
+  
   def test_can_get_times
-    @parser = Skanetrafiken::GetJourney.new
-    File.open("GetJourney_resultspage.xml", "r") { |infile|
-      @times = @parser.get_times(infile.read)
-    }
+    times = @g.get_times(@file)
     assert_equal ["2012-02-07T16:39:00",
       "2012-02-07T16:46:00",
       "2012-02-07T17:00:00",
       "2012-02-07T17:08:00",
       "2012-02-07T17:14:00"
-      ], @times
+      ], times
   end
+  
+#  def test_json
+#    j = @g.json(@file)
+#    puts j
+#  end
 end
 # 
 
 class GetJourneyParserTests < Test::Unit::TestCase
   def setup
     @file = File.open("GetStartEndPoint_querystation.xml", "r").read
-  end
-  def test_json
-    json = Skanetrafiken::XmlToJson.new().convert(@file)
-    #puts json
+    @q = Skanetrafiken::QueryStation.new
   end
   def test_can_get_stations
-    querystation = Skanetrafiken::QueryStation.new
-    @stations = querystation.get_stations(@file)
+    stations = @q.get_stations(@file)
     res = [{:name=>"Malmö C", :id=>"80000"},
      {:name=>"Malmö Södervärn", :id=>"80120"},
      {:name=>"Malmö Triangeln", :id=>"80140"},
@@ -117,7 +120,11 @@ class GetJourneyParserTests < Test::Unit::TestCase
      {:name=>"Malmö Arena", :id=>"80039"},
      {:name=>"Malmö Holma", :id=>"80500"},
      {:name=>"Malmö Högbo", :id=>"80324"}].map{ |item| Skanetrafiken::Point.new(item[:name],item[:id],:stop) }
-    assert_equal res, @stations
+    assert_equal res, stations
+  end
+  def test_json
+    j = @q.json(@file)
+    #puts j
   end
 end
 
