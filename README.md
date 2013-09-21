@@ -1,7 +1,8 @@
-skanetrafiken
+A small gem for the Skanetrafiken API
 =============
 
-Testing skanetrafiken api.
+The Skanetrafiken api can be found at:
 
 http://www.labs.skanetrafiken.se/
 
+Do fork and send pull requests.
