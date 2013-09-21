@@ -1,4 +1,7 @@
-module Skanetrafiken  
+module Skanetrafiken
+  
+  $point_string_totype ={ "STOP_AREA" => :stop, "ADDRESS" => :address, "POI" => :poi, "UNKNOWN" => :unknown}
+
   class QueryStation
     def initialize opts={}
         @xmltojson = opts[:xml_to_json] || XmlToJson.new()

@@ -1,5 +1,4 @@
 module Skanetrafiken
-
   
   $point_indexes = [:stop, :address, :poi, :unknown]
   

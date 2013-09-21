@@ -1,4 +1,8 @@
 module Skanetrafiken
+  $properties_line = {:name=>'Name',:no=>'No',:journey_date_time=>'JourneyDateTime',:is_timing_point=>'IsTimingPoint',\
+    :stop_point=>'StopPoint',:line_type_id=>'LineTypeId',:line_type_id=>'LineTypeId',:line_type_name=>'LineTypeName',\
+    :towards=>'Towards'}
+
   class Line
     attr_reader :name,:no,:journey_date_time,:is_timing_point,\
       :stop_point,:line_type_id,:line_type_id,:line_type_name,\
