@@ -20,5 +20,10 @@ module Skanetrafiken
         }.join("&")
     end
   end
-
+  
+  def self.to_ruby_convention(name)
+    return name.split(/(?=[A-Z])/).map do |word|
+      word.downcase
+    end.join('_')
+  end
 end
