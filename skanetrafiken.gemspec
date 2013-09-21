@@ -3,8 +3,8 @@ lib = File.expand_path('./lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
   
 Gem::Specification.new do |s|
-  s.name        = "Skanetrafiken"
-  s.version     = "0.1.0"
+  s.name        = "skanetrafiken"
+  s.version     = "0.1.1"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Oskar Gewalli"]
   s.email       = ["oskar@gewalli.se"]
