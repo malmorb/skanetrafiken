@@ -1,9 +1,9 @@
 $:.unshift File.join(File.dirname(__FILE__),'..','lib')
 require 'skanetrafiken'
-
+$test_files_dir = File.join(File.dirname(__FILE__),'testfiles')
 class GetDepartureArrival
     def initialize
-        @dir = File.dirname(__FILE__)
+        @dir = $test_files_dir
     end
     def get
         return File.open(File.join(@dir,'GetDepartureArrival.xml'), "r").read
@@ -18,7 +18,7 @@ end
 
 class GetStartEndPoint
     def initialize
-        @dir = File.dirname(__FILE__)
+        @dir = $test_files_dir
     end
     def get
         return File.open(File.join(@dir,'GetStartEndPoint.xml'), "r").read
@@ -30,7 +30,7 @@ end
 
 class GetJourney
     def initialize
-        @dir = File.dirname(__FILE__)
+        @dir = $test_files_dir
     end
     def get
         return File.open(File.join(@dir,'GetJourney.xml'), "r").read
