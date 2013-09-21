@@ -2,7 +2,7 @@
 $:.unshift File.dirname(__FILE__)
 require "test_helper"
 
-class GetJourneyParserTests < Test::Unit::TestCase
+class QueryStationParserTests < Test::Unit::TestCase
   def setup
     @file = GetStartEndPoint.new.get_querystation
     @q = Skanetrafiken::QueryStation.new
