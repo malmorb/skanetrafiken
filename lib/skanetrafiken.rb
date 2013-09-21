@@ -106,8 +106,11 @@ module Skanetrafiken
   $properties_line = {:name=>'Name',:no=>'No',:journey_date_time=>'JourneyDateTime',:is_timing_point=>'IsTimingPoint',\
     :stop_point=>'StopPoint',:line_type_id=>'LineTypeId',:line_type_id=>'LineTypeId',:line_type_name=>'LineTypeName',\
     :towards=>'Towards'}
-    
-    
+  $properties_line_realtime ={:dep_time_deviation => "DepTimeDeviation",:dep_deviation_affect=>"DepDeviationAffect"}  
+  class LineRealTime
+    attr_reader :dep_time_deviation, :dep_deviation_affect
+  end
+  
   class Line
     attr_reader :name,:no,:journey_date_time,:is_timing_point,\
       :stop_point,:line_type_id,:line_type_id,:line_type_name,\
@@ -156,6 +159,17 @@ module Skanetrafiken
           dic[key] = xval
           #puts "#{key} = #{value} = #{xval}"
         }
+        #deviation 
+        info = j.elements["RealTime/RealTimeInfo"]
+        if info 
+          dic[:dep_time_deviation] = info.elements["DepTimeDeviation"].text
+          dic[:dep_deviation_affect] = info.elements["DepDeviationAffect"].text
+        end
+        #<RealTime>
+        #<RealTimeInfo>
+        #<DepTimeDeviation>40</DepTimeDeviation>
+        #<DepDeviationAffect>CRITICAL</DepDeviationAffect>
+        
         #puts dic.map{ |k,v| "#{k}, #{v}" }.join('; ')
         el.push(Line.new(dic))
       }

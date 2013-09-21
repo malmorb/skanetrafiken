@@ -1,6 +1,6 @@
 #!/opt/local/bin/ruby1.9
-require "../skanetrafiken"
-
+$:.unshift File.dirname(__FILE__)
+require "test_helper"
 require 'test/unit'
 require "rubygems"
 
@@ -77,7 +77,7 @@ end
 
 class GetJourneyTests < Test::Unit::TestCase
   def setup
-    @file = File.open("GetJourney_resultspage.xml", "r").read
+    @file = GetJourney.new.get_resultspage
     @g = Skanetrafiken::GetJourney.new
   end
   
@@ -100,7 +100,7 @@ end
 
 class GetJourneyParserTests < Test::Unit::TestCase
   def setup
-    @file = File.open("GetStartEndPoint_querystation.xml", "r").read
+    @file = GetStartEndPoint.new.get_querystation
     @q = Skanetrafiken::QueryStation.new
   end
   def test_can_get_stations
@@ -131,7 +131,7 @@ end
 class GetDepartureArrivalParserTests < Test::Unit::TestCase
   def setup
     @g = Skanetrafiken::GetDepartureArrival.new
-    @file = File.open("GetDepartureArrival_stationresults.xml", "r").read
+    @file = GetDepartureArrival.new.get_station_results
   end
   def test_get_lines
     lines = @g.get_lines(@file)

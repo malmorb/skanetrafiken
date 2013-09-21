@@ -1,6 +1,9 @@
 source 'http://rubygems.org'
 
-gem 'sinatra', '1.3.2'
+gem "crack"
+gem "rake"
+
+#gem 'sinatra', '1.3.2'
 # gem 'rmagick', '2.9.0'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'

@@ -1,5 +1,7 @@
 #!/opt/local/bin/ruby1.9
-$:.unshift File.dirname("../app.rb")
+$:.unshift File.dirname(__FILE__)
+
+require "test_helper"
 require "app"
 
 require 'test/unit'
@@ -7,10 +9,10 @@ require "rubygems"
 class GetResponseFake
   def get_response_body(uri)
     if (uri.path.include?("querystation"))
-      return File.open("GetStartEndPoint_querystation.xml", "r").read
+      return GetStartEndPoint.new.get_querystation 
     end
     if (uri.path.include?("resultspage"))
-      return File.open("GetJourney_resultspage.xml", "r").read
+      return GetJourney.new.get_resultspage
     end
     raise "Uri?"
   end
