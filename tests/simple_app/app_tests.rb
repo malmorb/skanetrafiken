@@ -1,11 +1,9 @@
 #!/opt/local/bin/ruby1.9
+$:.unshift File.join(File.dirname(__FILE__),'..')
 $:.unshift File.dirname(__FILE__)
-
 require "test_helper"
 require "app"
 
-require 'test/unit'
-require "rubygems"
 class GetResponseFake
   def get_response_body(uri)
     if (uri.path.include?("querystation"))

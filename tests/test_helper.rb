@@ -1,5 +1,7 @@
 $:.unshift File.join(File.dirname(__FILE__),'..','lib')
 require 'skanetrafiken'
+require 'test/unit'
+
 $test_files_dir = File.join(File.dirname(__FILE__),'testfiles')
 class GetDepartureArrival
     def initialize
