@@ -1,6 +1,5 @@
 source 'http://rubygems.org'
 
-gem "crack"
 gem "rake"
 
 #gem 'sinatra', '1.3.2'

@@ -5,7 +5,7 @@ require "test_helper"
 class GetDepartureArrivalUrlTests < Test::Unit::TestCase
   def setup
     @c = Skanetrafiken::GetDepartureArrival.new
-    @malmo = Skanetrafiken::Point.new('malmö C',80000,:stop)
+    @malmo = Skanetrafiken::Point.new({:name=>'malmö C',:id=>80000,:type=>:stop})
   end
   def test_it_can_render
     rurl = "http://www.labs.skanetrafiken.se/v2.2/stationresults.asp?selPointFrKey=80000"

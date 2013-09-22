@@ -23,11 +23,10 @@ class QueryStationParserTests < Test::Unit::TestCase
      {:name=>"Malmö Höja", :id=>"80813"},
      {:name=>"Malmö Arena", :id=>"80039"},
      {:name=>"Malmö Holma", :id=>"80500"},
-     {:name=>"Malmö Högbo", :id=>"80324"}].map{ |item| Skanetrafiken::Point.new(item[:name],item[:id],:stop) }
+     {:name=>"Malmö Högbo", :id=>"80324"}].map{ |item| 
+        item[:type]=:stop
+        Skanetrafiken::Point.new(item)
+    }
     assert_equal res, stations
-  end
-  def test_json
-    j = @q.json(@file)
-    #puts j
   end
 end

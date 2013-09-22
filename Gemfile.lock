@@ -1,14 +1,10 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    crack (0.4.1)
-      safe_yaml (~> 0.9.0)
     rake (10.1.0)
-    safe_yaml (0.9.7)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  crack
   rake

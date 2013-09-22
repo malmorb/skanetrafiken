@@ -2,7 +2,6 @@ module Skanetrafiken
   class GetJourney
     def initialize opts = {}
       @uri = UriHelper.new
-      @xmltojson = opts[:xml_to_json] || XmlToJson.new()
     end
     def render_url(pointFrom,pointTo,lastStart)
       lastStartText = lastStart.strftime("%Y-%m-%d %H:%M")
@@ -25,11 +24,6 @@ module Skanetrafiken
             el.push(j.elements["DepDateTime"].text)
         }
         return el
-    end
-    def json(html)
-        doc = REXML::Document.new(html)
-        xml = doc.elements["soap:Envelope/soap:Body/GetJourneyResponse/GetJourneyResult/Journeys"]
-        return @xmltojson.convert( xml.to_s )
     end
   end
 end
