@@ -1,4 +1,4 @@
-#!/opt/local/bin/ruby1.9
+# encoding: utf-8
 require "rubygems"
 require 'net/http'
 require 'rexml/document'
