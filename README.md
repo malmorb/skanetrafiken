@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/malmorb/skanetrafiken.png?branch=master)](https://travis-ci.org/malmorb/skanetrafiken)
+
 A small gem for the Skanetrafiken API
 =============
 
