@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'rake/testtask'
 
 Rake::TestTask.new(:test) do |t|

@@ -1,5 +1,4 @@
 # encoding: utf-8
-#!/opt/local/bin/ruby1.9
 $:.unshift File.dirname(__FILE__)
 require "test_helper"
 

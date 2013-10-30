@@ -1,5 +1,4 @@
 # encoding: utf-8
-#!/opt/local/bin/ruby1.9
 require 'skanetrafiken'
 class HttpGetResponse
   def get_response_body(uri)
