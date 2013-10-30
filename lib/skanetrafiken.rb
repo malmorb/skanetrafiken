@@ -1,3 +1,4 @@
+# encoding: utf-8
 #!/opt/local/bin/ruby1.9
 require "rubygems"
 require 'net/http'

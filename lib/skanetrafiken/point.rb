@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Skanetrafiken
   
   $point_indexes = [:stop, :address, :poi, :unknown]

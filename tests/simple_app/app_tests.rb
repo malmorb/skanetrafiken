@@ -1,3 +1,4 @@
+# encoding: utf-8
 #!/opt/local/bin/ruby1.9
 $:.unshift File.join(File.dirname(__FILE__),'..')
 $:.unshift File.dirname(__FILE__)

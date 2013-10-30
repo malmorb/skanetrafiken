@@ -1,3 +1,4 @@
+# encoding: utf-8
 class GetStartEndPoint
     def initialize
         @dir = File.dirname(__FILE__)
