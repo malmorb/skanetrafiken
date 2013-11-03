@@ -25,11 +25,5 @@ module Skanetrafiken
       end.inject(true) { |result, element| result and element }
     end
 
-    def to_s
-      self.class.properties.map do |key|
-        val = instance_variable_get("@#{key.to_s}")
-        ":#{key.to_s}=> '#{val}'"
-      end.join(', ')
-    end
   end
 end
