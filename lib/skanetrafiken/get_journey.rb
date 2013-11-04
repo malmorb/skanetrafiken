@@ -11,8 +11,8 @@ module Skanetrafiken
       from = pointFrom.render()
       parameters = {
         :cmdaction =>:next,
-        :selPointFr =>pointFrom.render(),
-        :selPointTo =>pointTo.render(),
+        :selPointFr => from,
+        :selPointTo => to,
         :LastStart =>lastStartText
       }
       "http://www.labs.skanetrafiken.se/v2.2/resultspage.asp?" + @uri.parameters_from_hash(parameters)

@@ -4,6 +4,7 @@ require 'net/http'
 require 'rexml/document'
 require "json"
 require 'date'
+require 'skanetrafiken/struct_initializer'
 Dir[File.join(File.dirname(__FILE__),'skanetrafiken','*.rb')].each {|file| require file }
 module Skanetrafiken
     
